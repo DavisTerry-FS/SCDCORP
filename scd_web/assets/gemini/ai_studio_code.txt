@@ -1,0 +1,171 @@
+### SCD Web App: Static Content & Technical Copy (Version 2)
+
+#### --- Collection: `app_content` | Document: `main` ---
+
+**(Data for a single Firestore document to hold global site content.)**
+
+**[Field: `missionStatement`]**
+"Our mission is to use the performing arts as a vehicle for youth development. We aim to foster discipline, self-expression, leadership, and community engagement. SCD empowers young people to become responsible citizens and leaders of tomorrow."
+
+**[Field: `visionStatement`]**
+"To be a leading force in youth development through the performing arts, recognized for our artistic excellence and profound community impact. We envision a future where every member of our corps has the confidence, character, and skills to achieve their full potential."
+
+**[Field: `history`]**
+"Founded with a passion for rhythm and a commitment to our youth, Shark City Drum & Dance Corps has grown from a small community group into a beacon of artistic excellence and mentorship. We provide a structured, supportive environment where young performers can hone their craft, build lifelong friendships, and develop the character needed to succeed in all aspects of life. For years, we have served the community through countless performances, workshops, and outreach programs, leaving a lasting legacy of empowerment and artistic expression."
+
+**[Field: `joinUsTitle`]**
+"Become a Part of the Rhythm"
+
+**[Field: `joinUsText`]**
+"Are you ready to challenge yourself, learn new skills, and join an unforgettable team? Shark City Drum & Dance Corps is always looking for dedicated and passionate young performers to join our family. Whether you are an experienced drummer, a talented dancer, or a complete beginner with a willingness to learn, there is a place for you here. Auditions are held seasonally, and we encourage all interested youth to reach out. Contact us today to learn more about our next audition dates and how you can begin your journey with SCD."
+
+**[Field: `contactSubtitle`]**
+"We'd love to hear from you. Whether you have a question about our programs, a performance booking inquiry, or want to support our mission, please get in touch."
+
+---
+
+#### --- Page: Home (`home_page.dart`) ---
+
+**[Widget: `HeroSection` -> Headline]**
+EMPOWERING YOUTH THROUGH RHYTHM & DANCE
+
+**[Widget: `HeroSection` -> Button Text]**
+SEE OUR IMPACT
+
+**[Widget: `KeyPillarsSection` -> Title]**
+OUR PILLARS
+
+**[Widget: `PillarCard` 1 -> Title]**
+DISCIPLINE
+**[Widget: `PillarCard` 1 -> Text]**
+"Building character, focus, and a strong work ethic through structured practice and dedication to the craft."
+
+**[Widget: `PillarCard` 2 -> Title]**
+ARTISTRY
+**[Widget: `PillarCard` 2 -> Text]**
+"Fostering creativity, self-expression, and performance excellence in both drumming and dance."
+
+**[Widget: `PillarCard` 3 -> Title]**
+COMMUNITY
+**[Widget: `PillarCard` 3 -> Text]**
+"Creating a supportive, family-like environment and engaging with our community through performance and service."
+
+---
+
+#### --- Page: About (`about_page.dart`) ---
+
+**[Section: Staff -> Title]**
+OUR TEAM
+
+**[Section: Staff -> Subtitle]**
+"The dedicated instructors, directors, and board members who make our mission possible."
+
+**(This data should be loaded into the `staff` collection in Firestore.)**
+
+*   **name:** "Ronald Clark", **role:** "Executive Director"
+*   **name:** "Angela Hill", **role:** "VP of Performance"
+*   **name:** "Jermaine T.", **role:** "Drum Instructor"
+*   **name:** "Darrin H.", **role:** "Drum Instructor"
+*   **name:** "Myles R.", **role:** "Drum Instructor"
+*   **name:** "Rianna M.", **role:** "Dance Instructor"
+*   **name:** "Ciji R.", **role:** "Board Member"
+*   **name:** "Mika S.", **role:** "Board Member"
+
+---
+
+#### --- Page: Contact (`contact_page.dart` / Footer) ---
+
+**[Contact Info Section -> Service Area]**
+"Servicing Norfolk, VA"
+
+**[Contact Info Section -> Phone]**
+"(856) 313-0550"
+
+**[Contact Info Section -> Email]**
+"info@sharkcitydrum.com"
+
+**[Contact Form -> Fields]**
+*   **Label 1:** "Full Name"
+*   **Label 2:** "Email Address"
+*   **Label 3:** "Subject"
+*   **Label 4:** "Your Message"
+*   **Button Text:** "SEND MESSAGE"
+
+---
+
+#### --- Page: Donate / Support (`donate_page.dart`) ---
+
+**[Page Title]**
+SUPPORT OUR MISSION
+
+**[Page Text]**
+"Shark City Drum & Dance Corps is a 501(c)(3) non-profit organization dedicated to enriching the lives of youth through the performing arts. Your generous contribution directly supports our programs, providing uniforms, instruments, instruction, and performance opportunities for our members. Every donation, no matter the size, makes a profound impact and helps us continue to build leaders and empower our community. Thank you for your support!"
+
+**[Button Text]**
+DONATE NOW
+
+---
+
+#### --- Footer (`app_footer.dart`) ---
+
+**[Sponsors Section -> Title]**
+OUR SPONSORS & PARTNERS
+
+**(This data should be loaded from the `sponsors` collection in Firestore.)**
+
+*   **name:** "The City of Norfolk"
+*   **name:** "Norfolk Public Schools"
+*   **name:** "Norfolk Arts"
+*   **name:** "The Boys & Girls Club"
+*   **name:** "The Purpose Pusher"
+*   **name:** "Shark City Sportswear"
+*   **name:** "The Heart of Giving"
+*   **name:** "Walmart"
+*   **name:** "The Home Depot"
+*   **name:** "The Office of The Commonwealth Attorney"
+
+**[Copyright Text]**
+"© 2025 Shark City Drum & Dance Corps. All Rights Reserved. A 501(c)(3) Non-Profit Organization. Servicing Norfolk, VA."
+
+---
+---
+
+### **Analysis of Current Site vs. Proposed Plan**
+
+This analysis identifies inconsistencies and gaps between the existing `sharkcitydrum.com` and the new application plan, ensuring we account for all intended functionality.
+
+#### **1. Key Differences in Navigation & Structure:**
+
+*   **"Shop" and "Book Online" Pages:**
+    *   **Current Site:** Has explicit navigation links for "Shop" and "Book Online". While these pages may not be fully built out, their presence indicates a clear intent for these functionalities.
+    *   **Proposed Plan:** Our initial plan does not include dedicated pages for "Shop" or "Book Online". This is the most significant inconsistency.
+    *   **Recommendation:** Acknowledge these as critical **Phase 2 features**.
+        *   **"Shop"** will require an e-commerce integration (e.g., Stripe, Shopify Lite) and a more complex UI/backend.
+        *   **"Book Online"** should be implemented as a detailed inquiry form on the "Contact" page for Phase 1. This form can be designed to capture all necessary booking information (event type, date, location, contact person) and will feed directly into the future CRM.
+
+*   **"Menus" Page:**
+    *   **Current Site:** Has a navigation link titled "Menus". This appears to be a leftover artifact from the Wix template and does not contain relevant content.
+    *   **Proposed Plan:** We will correctly omit this page.
+
+*   **Sponsors/Partnerships:**
+    *   **Current Site:** Displays a list of sponsors near the bottom of the page.
+    *   **Proposed Plan:** Our initial page plan did not explicitly place the sponsors.
+    *   **Recommendation:** We will add a dedicated "Our Sponsors & Partners" section to the `app_footer.dart` widget. This ensures they are prominently and consistently displayed on every page without cluttering the main navigation. The content for this has been captured above.
+
+#### **2. Content & Feature Enhancements in the New Plan:**
+
+*   **Dedicated Media Page:** Our plan includes a dedicated `/media` page with tabs for photos and videos. This is a major improvement over the current site's simple embedded video section, allowing for a much richer and more organized display of content.
+
+*   **Dedicated Join Us Page:** Our plan includes a `/join-us` page. This creates a clear call to action for prospective members, which is more effective than blending this information with general content.
+
+*   **Structured "About Us" Page:** Our plan consolidates the "Mission" and "Meet the Team" sections into a single, cohesive `/about` page. This provides a clearer narrative for visitors wanting to learn about the organization's purpose and people.
+
+*   **Dynamic Events System:** While the current site shows "No events", our plan is built around a dynamic `events` collection in Firestore. This will allow SCD staff to easily add, update, and display upcoming and past performances, making the site a timely and valuable resource.
+
+#### **3. Conclusion & Actionable Items:**
+
+*   The proposed new site structure is a significant improvement in terms of user experience, organization, and scalability.
+*   **Action Item 1:** For the initial launch (Phase 1), the "Book Online" functionality will be handled via an expanded, detailed contact form on the `/contact` page.
+*   **Action Item 2:** The "Shop" functionality will be deferred to a future development phase due to its complexity.
+*   **Action Item 3:** The list of sponsors will be integrated into the site-wide footer.
+*   The static content document above has been updated to reflect all these findings.

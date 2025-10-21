@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 // ignore: unused_import
 import '../../config/theme.dart';
@@ -27,11 +28,14 @@ class EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              image,
+            CachedNetworkImage(
+              imageUrl: image,
               height: 120,
               width: double.infinity,
               fit: BoxFit.cover,
+              placeholder: (context, url) =>
+                  Container(color: Colors.grey.shade800),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
             Padding(
               // Reducing vertical padding to prevent overflow in the parent ListView.

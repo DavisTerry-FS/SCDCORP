@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../utils/app_constants.dart';
 import 'app_header.dart';
+import 'app_footer.dart'; // Import the AppFooter
 
 class MainLayout extends StatelessWidget {
   final Widget child;
@@ -14,10 +15,13 @@ class MainLayout extends StatelessWidget {
       appBar: const AppHeader(),
       body: child,
       endDrawer: const AppDrawer(),
+      // Add the AppFooter to the bottom of the Scaffold
+      bottomNavigationBar: const AppFooter(),
     );
   }
 }
 
+// ... (AppDrawer remains the same)
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
@@ -28,21 +32,21 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.black,
-            ),
+            decoration: BoxDecoration(color: Colors.black),
             child: Text(
               'SCD',
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
-          ...navItems.map((item) => ListTile(
-                title: Text(item.label),
-                onTap: () {
-                  context.go(item.route);
-                  Navigator.pop(context); // Close the drawer
-                },
-              )),
+          ...navItems.map(
+            (item) => ListTile(
+              title: Text(item.label),
+              onTap: () {
+                context.go(item.route);
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+          ),
         ],
       ),
     );

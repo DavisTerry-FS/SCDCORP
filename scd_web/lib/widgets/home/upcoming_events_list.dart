@@ -1,51 +1,65 @@
 import 'package:flutter/material.dart';
-import '../events/event_card.dart';
+import 'package:intl/intl.dart';
+import 'package:scd_web/data/models/event_model.dart';
+import 'package:scd_web/data/services/firestore_service.dart';
+import 'package:scd_web/widgets/events/event_card.dart';
 
 class UpcomingEventsList extends StatelessWidget {
   const UpcomingEventsList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
             'Upcoming Events',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white, // Assuming dark theme
-                ),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 190,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                EventCard(
-                  title: 'Summer Camp',
-                  date: 'July 1–30',
-                  image: 'assets/event1.png',
-                ),
-                SizedBox(width: 16),
-                EventCard(
-                  title: 'Annual Showcase',
-                  date: 'August 15',
-                  image: 'assets/event2.png',
-                ),
-                SizedBox(width: 16),
-                EventCard(
-                  title: 'Fall Benefit',
-                  date: 'November 7',
-                  image: 'assets/event3.png',
-                ),
-              ],
-            ),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 220, // Increased height to accommodate card content
+          child: FutureBuilder<List<EventModel>>(
+            future: FirestoreService.instance.getEvents(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No upcoming events.'));
+              }
+
+              final events = snapshot.data!;
+
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  final event = events[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: EventCard(
+                      title: event.title,
+                      // Using intl package for nice date formatting
+                      date: DateFormat('MMM d, yyyy').format(event.date),
+                      image: event.imageUrl,
+                    ),
+                  );
+                },
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
