@@ -1,9 +1,11 @@
+import 'dart:developer' as developer;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scd_web/data/models/app_content_model.dart';
 import 'package:scd_web/data/models/event_model.dart';
 import 'package:scd_web/data/models/gallery_item_model.dart';
 import 'package:scd_web/data/models/staff_member_model.dart';
 import 'package:scd_web/data/models/pillar_model.dart';
+import 'package:scd_web/data/models/sponsor_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -26,7 +28,11 @@ class FirestoreService {
         );
       }
     } catch (e) {
-      print("Error fetching app content: $e");
+      developer.log(
+        "Error fetching app content",
+        error: e,
+        name: 'FirestoreService',
+      );
       rethrow; // Rethrowing allows the UI to handle the error state.
     }
   }
@@ -42,7 +48,11 @@ class FirestoreService {
           .map((doc) => StaffMemberModel.fromFirestore(doc))
           .toList();
     } catch (e) {
-      print("Error fetching staff members: $e");
+      developer.log(
+        "Error fetching staff members",
+        error: e,
+        name: 'FirestoreService',
+      );
       rethrow;
     }
   }
@@ -56,7 +66,11 @@ class FirestoreService {
           .get();
       return snapshot.docs.map((doc) => EventModel.fromFirestore(doc)).toList();
     } catch (e) {
-      print("Error fetching events: $e");
+      developer.log(
+        "Error fetching events",
+        error: e,
+        name: 'FirestoreService',
+      );
       rethrow;
     }
   }
@@ -72,7 +86,11 @@ class FirestoreService {
           .map((doc) => GalleryItemModel.fromFirestore(doc))
           .toList();
     } catch (e) {
-      print("Error fetching gallery items: $e");
+      developer.log(
+        "Error fetching gallery items",
+        error: e,
+        name: 'FirestoreService',
+      );
       rethrow;
     }
   }
@@ -88,7 +106,57 @@ class FirestoreService {
           .map((doc) => PillarModel.fromFirestore(doc))
           .toList();
     } catch (e) {
-      print("Error fetching pillars: $e");
+      developer.log(
+        "Error fetching pillars",
+        error: e,
+        name: 'FirestoreService',
+      );
+      rethrow;
+    }
+  }
+
+  /// Fetches all sponsors, ordered by their displayOrder.
+  Future<List<SponsorModel>> getSponsors() async {
+    try {
+      final snapshot = await _db
+          .collection('sponsors')
+          .orderBy('displayOrder')
+          .get();
+      return snapshot.docs
+          .map((doc) => SponsorModel.fromFirestore(doc))
+          .toList();
+    } catch (e) {
+      developer.log(
+        "Error fetching sponsors",
+        error: e,
+        name: 'FirestoreService',
+      );
+      rethrow;
+    }
+  }
+
+  /// Submits a contact form to Firestore.
+  Future<void> submitContactForm({
+    required String name,
+    required String email,
+    required String subject,
+    required String message,
+  }) async {
+    try {
+      await _db.collection('contact_submissions').add({
+        'name': name,
+        'email': email,
+        'subject': subject,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+        'status': 'unread', // For admin dashboard to track
+      });
+    } catch (e) {
+      developer.log(
+        "Error submitting contact form",
+        error: e,
+        name: 'FirestoreService',
+      );
       rethrow;
     }
   }

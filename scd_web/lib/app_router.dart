@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:scd_web/data/services/auth_service.dart';
 import 'package:go_router/go_router.dart';
-import 'pages/home_page.dart';
+import 'pages/home_page_static.dart'; // Using static version temporarily
 import 'pages/about_page.dart';
 import 'pages/events_page.dart';
 import 'pages/media_page.dart';
@@ -39,7 +39,7 @@ class AppRouter {
         // Public Routes
         GoRoute(
           path: '/',
-          builder: (c, s) => const MainLayout(child: HomePage()),
+          builder: (c, s) => const MainLayout(child: HomePageStatic()),
         ),
         GoRoute(
           path: '/about',

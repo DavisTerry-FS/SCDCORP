@@ -1,12 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:scd_web/data/services/firestore_service.dart';
 
-class ContactPage extends StatelessWidget {
+class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
 
   @override
+  State<ContactPage> createState() => _ContactPageState();
+}
+
+class _ContactPageState extends State<ContactPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _subjectController = TextEditingController();
+  final _messageController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _subjectController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitForm() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      await FirestoreService.instance.submitContactForm(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        subject: _subjectController.text.trim(),
+        message: _messageController.text.trim(),
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Thank you! Your message has been sent.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Clear the form
+        _nameController.clear();
+        _emailController.clear();
+        _subjectController.clear();
+        _messageController.clear();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error sending message: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
 
     return SingleChildScrollView(
       child: Center(
@@ -15,7 +79,7 @@ class ContactPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: Form(
-              key: formKey,
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -32,26 +96,38 @@ class ContactPage extends StatelessWidget {
                   _buildContactInfo(context),
                   const SizedBox(height: 40),
                   TextFormField(
+                    controller: _nameController,
                     decoration: const InputDecoration(labelText: 'Full Name'),
                     validator: (value) =>
                         value!.isEmpty ? 'Please enter your name' : null,
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
+                    controller: _emailController,
                     decoration: const InputDecoration(
                       labelText: 'Email Address',
                     ),
-                    validator: (value) =>
-                        value!.isEmpty ? 'Please enter your email' : null,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      if (!value.contains('@')) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
+                    controller: _subjectController,
                     decoration: const InputDecoration(labelText: 'Subject'),
                     validator: (value) =>
                         value!.isEmpty ? 'Please enter a subject' : null,
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
+                    controller: _messageController,
                     decoration: const InputDecoration(
                       labelText: 'Your Message',
                     ),
@@ -62,17 +138,14 @@ class ContactPage extends StatelessWidget {
                   const SizedBox(height: 32),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          // TODO: Implement form submission logic (e.g., send email or save to Firestore)
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Form submitted (simulation)'),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text('SEND MESSAGE'),
+                      onPressed: _isSubmitting ? null : _submitForm,
+                      child: _isSubmitting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('SEND MESSAGE'),
                     ),
                   ),
                 ],

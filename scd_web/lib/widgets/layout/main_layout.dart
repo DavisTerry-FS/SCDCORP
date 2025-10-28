@@ -13,10 +13,13 @@ class MainLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppHeader(),
-      body: child,
+      body: Column(
+        children: [
+          Expanded(child: child),
+          const AppFooter(),
+        ],
+      ),
       endDrawer: const AppDrawer(),
-      // Add the AppFooter to the bottom of the Scaffold
-      bottomNavigationBar: const AppFooter(),
     );
   }
 }
